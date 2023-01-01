@@ -9,17 +9,22 @@
   <body>
     <nav class="navbar navbar-expand-lg bg-light">
       <div class="container">
-        <a class="navbar-brand" href="{{ url('/') }}">Cloud Storage</a>
+        <a class="navbar-brand" href="{{ url('/') }}">Pana Cloud Storage</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div class="navbar-nav">
-            <a class="nav-link" href="{{ url('/') }}">Beranda </a>
-            <a class="nav-link" href="#">Profil</a>
-          </div>
           <div class="navbar-nav ms-auto">
-            <a class="nav-link" href="{{ url('/') }}">Logout</a>
+            <ul class="navbar-nav">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  {{Auth::user()->name}} ({{Auth::user()->email}})
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="nav-link" href="{{ url('/logout') }}">Logout</a></li>
+                </ul>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

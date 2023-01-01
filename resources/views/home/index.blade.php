@@ -1,6 +1,6 @@
 @extends('templates.app')
 
-@section('title', 'Cloud Storage')
+@section('title', 'Pana Cloud Storage')
 
 @section('content')
 <div class="container">
@@ -16,6 +16,10 @@
             @foreach ($errors->all() as $error)
             {{ $error }}<br/>
             @endforeach
+          </div>
+        @elseif(session('status'))
+          <div class="alert alert-success mb-5">
+              {{ session('status') }}
           </div>
 				@endif
 
@@ -71,7 +75,7 @@
                     <input type="hidden" name="tipe" value="{{$f->tipe_file}}">
                     <input type="submit" value="Download" class="btn btn-primary mb-1">
                   </form>
-                  <form action="{{ url('/hapus') }}" method="post">
+                  <form action="{{ url('/hapus') }}" method="post" onsubmit="return confirm('Apakah anda ingin menghapus file ini?');">
                     @csrf
                     <input type="hidden" name="id" value="{{$f->id}}">
                     <input type="hidden" name="file" value="{{$f->nama_file}}">

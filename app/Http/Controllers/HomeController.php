@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use App\Models\File as Berkas;
 use Illuminate\Support\Facades\File as ToolFile;
 
@@ -15,7 +17,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $file = Berkas::get();
+        $file = Berkas::where('id_user', Auth::user()->id)->get();
         return view('home.index', ['file' => $file]);
     }
 
@@ -23,14 +25,14 @@ class HomeController extends Controller
         $this->validate($request, [
 			'file' => 'required|file',
 		]);
- 
-		// menyimpan data file yang diupload ke variabel $file
+        
 		$file = $request->file('file');
 
         $nama_file = time()."_".$file->getClientOriginalName();
         $ukuran_file = $file->getSize();
  
         Berkas::create([
+            'id_user' => Auth::user()->id,
             'nama_file' => $nama_file,
             'nama_file_asli' => $file->getClientOriginalName(),
             'tipe_file' => $file->getMimeType(),
@@ -39,7 +41,7 @@ class HomeController extends Controller
 		$tujuan_upload = 'data_file';
 		$file->move($tujuan_upload,$nama_file);
  
- 
+        Session::flash('status', 'File berhasil ditambahkan');
 		return redirect()->back();
     }
 
@@ -59,75 +61,10 @@ class HomeController extends Controller
         if(ToolFile::exists(public_path('data_file/'. $berkas))){
             Berkas::where('id', $request->id)->delete();
             ToolFile::delete(public_path('data_file/' . $berkas));
+            Session::flash('status', 'File berhasil dihapus');
             return redirect()->back();
         }else{
             dd('File tidak ada.');
         }
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }
